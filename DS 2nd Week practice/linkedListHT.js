@@ -1,0 +1,79 @@
+class Node{
+    constructor(key,value){
+        this.key = key
+        this.value = value
+        this.next = null
+    }
+}
+
+class hashTable{
+    constructor(size){
+        this.table = new Array(size)
+        this.size = size
+    }
+
+    hash(key){
+        let total = 0
+        for (let i = 0; i < key.length; i++) {
+            total += key.charCodeAt(i)  
+        }
+        return total % this.size
+    }
+
+    set(key, value){
+        let index = this.hash(key)
+        const node = new Node(key, value)
+
+        if(!this.table[index]){
+            this.table[index] = node
+        }else{
+            let curr = this.table[index]
+            while(curr.next){
+                if(curr.key === key){
+                    curr.value = value
+                    return
+                }
+                curr = curr.next
+            }
+
+            if(curr.key === key){
+                curr.value = value
+            }else{
+                curr.next = node
+            }
+        }
+    }
+
+    get(key){
+        let index = this.hash(key)
+        let curr = this.table[index]
+        while(curr){
+            if(curr.key === key ){
+                return curr.value
+            }
+            curr = curr.next
+        }
+        return undefined
+    }
+
+    delete(key){
+        let index = this.hash(key)
+        let curr = this.table
+        let prev = null
+
+        while(curr){
+            if(curr.key === key){
+                if(prev){
+                    prev.next = curr.next
+                }else{
+                    this.table[index] = curr.next
+                }
+                return true
+            }
+
+            prev = curr
+            curr = curr.next
+        }
+        return false
+    }
+}
